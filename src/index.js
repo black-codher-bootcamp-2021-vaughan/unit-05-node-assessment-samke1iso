@@ -98,27 +98,32 @@ app.post('/todos', (_, res) => {
  res.status(201).send(todos);
  })});
 
-
-
 //Add PATCH request with path '/todos/:id
 
 // app.patch('todos/:id', (_,res) => {
 
 // })
 
-
-
 //Add POST request with path '/todos/:id/complete
 
+app.post('/todos/:id/complete', (_, res) => { 
+  
+ if (todos.completed =true){
+   return res.status(400).end();
+ }
+ 
+  res.header("Content-Type","application/json");
+  fs.writeFile(__dirname + process.env.BASE_JSON_PATH,  JSON.stringify(todos), err => {
+   
+    if (err) {
+      console.error(err)
+      return
+    }
 
-// app.post('/todos/:id/complete', (_, res) => {}
+ res.status(200).send(completedTodos);
+ })});
 
-// app.post('/todos/:id/complete', (_, res) => {
-
-// })
 //Add POST request with path '/todos/:id/undo
-
-// app.post()
 
 //Add DELETE request with path '/todos/:id
 
