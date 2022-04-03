@@ -1,14 +1,14 @@
 require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
-// app.use(express.json());
 const app = express();
 const path = require('path');
 const port = 8080;
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
+const res = require('express/lib/response');
 const todoFilePath = process.env.BASE_JSON_PATH;
-const today = new Date;
+const today = new Date();
 
 
 //Read todos from todos.json into variable
@@ -61,7 +61,7 @@ todos.forEach(function (element){
   if (element.completed = true ) {
     completedTodos.push(element)
   }
-  console.log(completedTodos)
+
 })
 
 app.get('/todos/completed', (_, res) => { 
@@ -74,19 +74,53 @@ app.get('/todos/completed', (_, res) => {
 
 //Add POST request with path '/todos'
 
+app.post('/todos', (_, res) => { 
+  const oneNewTodo= {
+      "id"    : todos.length + 1,
+    "name" : 'Turn on central heating',
+    "created" : "2021-10-20T18:25:43.511Z",
+     "due": new Date,
+     "completed" : true
+  };
+  todos.push(oneNewTodo)
+ if (!_.body.due){
+   return res.status(400).end();
+ }
+ 
+  res.header("Content-Type","application/json");
+  fs.writeFile(__dirname + process.env.BASE_JSON_PATH,  JSON.stringify(todos), err => {
+   
+    if (err) {
+      console.error(err)
+      return
+    }
+
+ res.status(201).send(todos);
+ })});
+
 
 
 //Add PATCH request with path '/todos/:id
 
+// app.patch('todos/:id', (_,res) => {
+
+// })
+
+
+
 //Add POST request with path '/todos/:id/complete
 
-// app.post()
+
+// app.post('/todos/:id/complete', (_, res) => {}
+
+// app.post('/todos/:id/complete', (_, res) => {
+
+// })
 //Add POST request with path '/todos/:id/undo
 
 // app.post()
-//Add DELETE request with path '/todos/:id
 
-// app.delete()
+//Add DELETE request with path '/todos/:id
 
 
 app.listen(port, function () {
